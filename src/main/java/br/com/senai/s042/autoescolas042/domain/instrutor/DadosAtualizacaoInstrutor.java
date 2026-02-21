@@ -1,4 +1,6 @@
-package br.com.senai.s042.autoescolas042.instrutor;
+package br.com.senai.s042.autoescolas042.domain.instrutor;
+
+import br.com.senai.s042.autoescolas042.domain.endereco.DadosEndereco;
 
 public record DadosAtualizacaoInstrutor(
         Long id,

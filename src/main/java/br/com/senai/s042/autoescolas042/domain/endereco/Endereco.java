@@ -1,4 +1,4 @@
-package br.com.senai.s042.autoescolas042.instrutor;
+package br.com.senai.s042.autoescolas042.domain.endereco;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

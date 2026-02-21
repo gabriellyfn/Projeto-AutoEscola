@@ -1,8 +1,6 @@
-package br.com.senai.s042.autoescolas042.instrutor;
+package br.com.senai.s042.autoescolas042.domain.aluno;
 
-// RECORD é imutável por padrão, classe imutavel
-
-public record DadosEndereco(String logradouro,
+public record DadosEndereco(String Logradouro,
                             String numero,
                             String complemento,
                             String bairro,

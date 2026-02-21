@@ -1,5 +1,6 @@
-package br.com.senai.s042.autoescolas042.instrutor;
+package br.com.senai.s042.autoescolas042.domain.instrutor;
 
+import br.com.senai.s042.autoescolas042.domain.endereco.Endereco;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -29,6 +30,7 @@ public class Instrutor {
 
     @Embedded
     private Endereco endereco;
+    private Boolean ativo = true;
 
     public Instrutor(DadosCadastroInstrutor dados){
         this.nome = dados.nome();
@@ -49,5 +51,9 @@ public class Instrutor {
         if (dados.endereco() != null){
             this.endereco.atualizarInformacoes(dados.endereco());
         }
+    }
+
+    public void excluir() {
+        this.ativo = false;
     }
 }
