@@ -1,7 +1,11 @@
 package br.com.senai.s042.autoescolas042.domain.aluno;
 
+import br.com.senai.s042.autoescolas042.domain.endereco.DadosEndereco;
+
 public record DadosAtualizacaoAluno(
+        String id,
         String nome,
         String telefone,
-        String endereco) {
+        DadosEndereco endereco
+) {
 }
