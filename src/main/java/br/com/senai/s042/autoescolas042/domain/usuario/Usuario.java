@@ -26,6 +26,7 @@ public class Usuario implements UserDetails {
     private Long id;
     private String login;
     private String senha;
+    private Boolean ativo;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -40,6 +41,16 @@ public class Usuario implements UserDetails {
     @Override
     public String getUsername() {
         return login;
+    }
+
+    public Usuario(DadosCadastroUsuarios dadosUsuario) {
+        this.login = dadosUsuario.login();
+        this.senha = dadosUsuario.senha();
+        this.ativo = true;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     @Override
@@ -60,5 +71,20 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void atualizarInformacoes(DadosAtualizacaoUsuario dadosAtualizacaoUsuario) {
+
+        if(dadosAtualizacaoUsuario.login() != null && !dadosAtualizacaoUsuario.login().isBlank()){
+            this.login = dadosAtualizacaoUsuario.login();
+        }
+
+        if(dadosAtualizacaoUsuario.senha() != null && !dadosAtualizacaoUsuario.senha().isBlank()){
+            this.senha = dadosAtualizacaoUsuario.senha();
+        }
+    }
+
+    public void excluir() {
+        this.ativo = false;
     }
 }
