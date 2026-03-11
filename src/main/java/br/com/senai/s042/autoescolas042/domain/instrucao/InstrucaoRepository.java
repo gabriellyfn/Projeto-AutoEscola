@@ -1,4 +1,6 @@
 package br.com.senai.s042.autoescolas042.domain.instrucao;
 
-public interface InstrucaoRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface InstrucaoRepository extends JpaRepository<Instrucao, Long> {
 }

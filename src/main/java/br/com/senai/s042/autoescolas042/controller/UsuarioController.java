@@ -8,11 +8,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -25,6 +28,7 @@ public class UsuarioController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Page<DadosListagemUsuarios>> listarUsuarios(
             @PageableDefault(size = 10, sort = {"login"}) Pageable pageable){
         Page page = usuarioRepository.findAllByAtivoTrue(pageable).map(DadosListagemUsuarios::new);
@@ -32,6 +36,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<DadosDetalhamentoUsuario> detalharUsuario(@PathVariable Long id){
         Usuario usuario = usuarioRepository.getReferenceById(id);
 
@@ -40,13 +45,23 @@ public class UsuarioController {
 
     @PostMapping
     @Transactional
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<DadosDetalhamentoUsuario> cadastrarUsuarios(
             @RequestBody
             @Valid
             DadosCadastroUsuarios dadosUsuario,
             UriComponentsBuilder uriBuilder){
-        Usuario usuario = new Usuario (dadosUsuario);
-        usuario.setSenha(passwordEncoder.encode(dadosUsuario.senha()));
+
+        String senhaCriptografada = passwordEncoder.encode(dadosUsuario.senha());
+
+        Usuario usuario = new Usuario (
+                null,
+                dadosUsuario.login(),
+                senhaCriptografada,
+                true,
+                dadosUsuario.perfil()
+        );
+
         usuarioRepository.save(usuario);
 
         URI uri = uriBuilder.path("/usuarios/{id}")
@@ -55,8 +70,10 @@ public class UsuarioController {
         return ResponseEntity.created(uri)
                 .body(new DadosDetalhamentoUsuario(usuario));
     }
+
     @PutMapping
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public void atualizarUsuarios(@RequestBody DadosAtualizacaoUsuario dadosAtualizacaoUsuario){
         Usuario usuario = usuarioRepository.getReferenceById(Long.valueOf(dadosAtualizacaoUsuario.id()));
 

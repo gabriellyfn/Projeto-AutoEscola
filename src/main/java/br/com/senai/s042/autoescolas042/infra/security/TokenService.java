@@ -35,7 +35,6 @@ public class TokenService {
     }
 
     public String getSubject(String token){
-        DecodedJWT decodedJWT;
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)

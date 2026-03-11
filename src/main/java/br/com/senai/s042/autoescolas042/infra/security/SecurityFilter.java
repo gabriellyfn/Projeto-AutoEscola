@@ -22,27 +22,30 @@ public class SecurityFilter extends OncePerRequestFilter {
     private TokenService tokenService;
 
     @Autowired
-    private UsuarioRepository repository;
+    private UsuarioRepository usuarioRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String tokenJWT = recuperarToken(request);
-        if (tokenJWT != null){
-            String subject = tokenService.getSubject(tokenJWT);
-            UserDetails usuario = repository.findByLogin(subject);
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+
+        String token = recuperarToken(request);
+
+        if (token != null){
+            String subject = tokenService.getSubject(token);
+            UserDetails usuario = usuarioRepository.findByLogin(subject);
             UsernamePasswordAuthenticationToken authenticationToken
                     = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+            System.out.println("Token validado para usuário: " + subject);
         }
 
         filterChain.doFilter(request, response);
     }
 
     private String recuperarToken(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null){
-            return authorizationHeader.replace("Bearer ", "");
-        }
-        return null;
+        String authHeader = request.getHeader("Authorization");
+        return authHeader != null ? authHeader.replace("Bearer", "" ): null;
     }
 }
