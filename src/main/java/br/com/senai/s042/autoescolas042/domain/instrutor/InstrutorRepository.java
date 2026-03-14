@@ -26,4 +26,12 @@ public interface InstrutorRepository extends JpaRepository <Instrutor, Long>{
 """)
 
     Instrutor escolherInstrutorAleatorioDisponivel(Especialidade especialidade, @NotNull @Future LocalDateTime data);
+
+    @Query("""
+        SELECT i.ativo
+        FROM Instrutor i
+        WHERE 
+        i.id = :id
+""")
+    Boolean findAtivoById(Long id);
 }

@@ -18,17 +18,22 @@ import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 @Service
 public class AgendaDeInstrucoes {
 
-    @Autowired
-    private InstrucaoRepository instrucaoRepository;
 
-    @Autowired
-    private AlunoRepository alunoRepository;
+    private final InstrucaoRepository repository;
+    private final AlunoRepository alunoRepository;
+    private final InstrutorRepository instrutorRepository;
+    private final List<ValidadorAgendamento> validadores;
+    public AgendaDeInstrucoes(
+            InstrucaoRepository repository,
+            AlunoRepository alunoRepository,
+            InstrutorRepository instrutorRepository,
+            List<ValidadorAgendamento> validadores){
+        this.repository = repository;
+        this.alunoRepository = alunoRepository;
+        this.instrutorRepository = instrutorRepository;
+        this.validadores = validadores;
 
-    @Autowired
-    private InstrutorRepository instrutorRepository;
-
-    @Autowired
-    private List<ValidadorAgendamento> validadorAgendamentos;
+    }
 
     @Transactional
     public DadosDetalhamentoInstrucao agendarInstrucao(DadosAgendamentoInstrucao dadosAgendamentoInstrucao){
@@ -40,10 +45,14 @@ public class AgendaDeInstrucoes {
        }
 
        //Validacoes das regras de negocio
-        validadorAgendamentos.forEach(v -> v.validar(dadosAgendamentoInstrucao));
+        validadores.forEach(v -> v.validar(dadosAgendamentoInstrucao));
         Aluno aluno = alunoRepository.getReferenceById(dadosAgendamentoInstrucao.idAluno());
 
         Instrutor instrutor = escolherInstrutor(dadosAgendamentoInstrucao);
+
+        if (instrutor == null){
+            throw new InstrutorIndisponivelException("Não há instrutor disponível para a data e hora escolhida!");
+        }
 
         Instrucao instrucao = new Instrucao(
                 null,
@@ -52,7 +61,7 @@ public class AgendaDeInstrucoes {
                 dadosAgendamentoInstrucao.data()
         );
 
-        instrucaoRepository.save(instrucao);
+        repository.save(instrucao);
 
         return new DadosDetalhamentoInstrucao(instrucao);
     }
