@@ -8,31 +8,28 @@ import br.com.senai.s042.autoescolas042.domain.instrutor.Instrutor;
 import br.com.senai.s042.autoescolas042.domain.instrutor.InstrutorNaoExisteException;
 import br.com.senai.s042.autoescolas042.domain.instrutor.InstrutorRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @Service
 public class AgendaDeInstrucoes {
-
 
     private final InstrucaoRepository repository;
     private final AlunoRepository alunoRepository;
     private final InstrutorRepository instrutorRepository;
     private final List<ValidadorAgendamento> validadores;
+
     public AgendaDeInstrucoes(
             InstrucaoRepository repository,
             AlunoRepository alunoRepository,
             InstrutorRepository instrutorRepository,
-            List<ValidadorAgendamento> validadores){
+            List<ValidadorAgendamento> validadores
+    ){
         this.repository = repository;
         this.alunoRepository = alunoRepository;
         this.instrutorRepository = instrutorRepository;
         this.validadores = validadores;
-
     }
 
     @Transactional
@@ -58,7 +55,9 @@ public class AgendaDeInstrucoes {
                 null,
                 aluno,
                 instrutor,
-                dadosAgendamentoInstrucao.data()
+                dadosAgendamentoInstrucao.data(),
+                StatusInstrucao.AGENDADA,
+                null
         );
 
         repository.save(instrucao);

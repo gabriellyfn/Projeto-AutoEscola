@@ -1,8 +1,6 @@
 package br.com.senai.s042.autoescolas042.controller;
 
-import br.com.senai.s042.autoescolas042.domain.instrucao.AgendaDeInstrucoes;
-import br.com.senai.s042.autoescolas042.domain.instrucao.DadosAgendamentoInstrucao;
-import br.com.senai.s042.autoescolas042.domain.instrucao.DadosDetalhamentoInstrucao;
+import br.com.senai.s042.autoescolas042.domain.instrucao.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/instrucoes")
 public class InstrucaoController {
 
-    @Autowired
-    private AgendaDeInstrucoes agendaDeInstrucoes;
+    private final AgendaDeInstrucoes agendaDeInstrucoes;
+    private final CancelamentoDeInstrucoes cancelamentoDeInstrucoes;
+
+    public InstrucaoController(AgendaDeInstrucoes agendaDeInstrucoes,
+                               CancelamentoDeInstrucoes cancelamentoDeInstrucoes) {
+        this.agendaDeInstrucoes = agendaDeInstrucoes;
+        this.cancelamentoDeInstrucoes = cancelamentoDeInstrucoes;
+    }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -27,6 +31,18 @@ public class InstrucaoController {
             DadosAgendamentoInstrucao dadosAgendamentoInstrucao){
 
         DadosDetalhamentoInstrucao dto = agendaDeInstrucoes.agendarInstrucao(dadosAgendamentoInstrucao);
+
+        return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping("/cancelar")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity <DadosDetalhamentoInstrucao> cancelarInstrucao(
+            @RequestBody
+            @Valid
+            DadosCancelamentoInstrucao dadosCancelamentoInstrucao) {
+
+        DadosDetalhamentoInstrucao dto = cancelamentoDeInstrucoes.cancelarInstrucao(dadosCancelamentoInstrucao);
 
         return ResponseEntity.ok(dto);
     }

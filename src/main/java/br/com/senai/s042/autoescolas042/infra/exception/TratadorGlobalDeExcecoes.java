@@ -1,6 +1,7 @@
 package br.com.senai.s042.autoescolas042.infra.exception;
 
 import br.com.senai.s042.autoescolas042.domain.aluno.AlunoNaoExisteException;
+import br.com.senai.s042.autoescolas042.domain.instrucao.InstrucaoNaoExisteException;
 import br.com.senai.s042.autoescolas042.domain.instrucao.validacoes.ValidacaoException;
 import br.com.senai.s042.autoescolas042.domain.instrutor.Instrutor;
 import br.com.senai.s042.autoescolas042.domain.instrutor.InstrutorNaoExisteException;
@@ -33,6 +34,10 @@ public class TratadorGlobalDeExcecoes {
 
     @ExceptionHandler(AlunoNaoExisteException.class)
     public ResponseEntity tratarAlunoNaoExisteException(AlunoNaoExisteException ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+    @ExceptionHandler(InstrucaoNaoExisteException.class)
+    public ResponseEntity tratarInstrucaoNaoExisteException(InstrutorNaoExisteException ex){
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
