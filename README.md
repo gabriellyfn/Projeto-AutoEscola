@@ -178,7 +178,7 @@ Cliente → Filtro → Controller → Service → Repository
 
 ---
 
-🧩 Arquitetura Hexagonal (Ports & Adapters)
+##🧩 Arquitetura Hexagonal (Ports & Adapters)
         [ Adapters (Controller, DB, APIs) ]
                      ↓
                [ Domínio ]
