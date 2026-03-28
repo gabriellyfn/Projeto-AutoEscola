@@ -25,8 +25,8 @@ public class EnderecoMapper {
                 endereco.getComplemento(),
                 endereco.getBairro(),
                 endereco.getCidade(),
-                endereco.getUf(),
-                endereco.getCep()
+                endereco.getCep(),
+                endereco.getUf()
         );
     }
 }

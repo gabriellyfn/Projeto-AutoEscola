@@ -1,0 +1,8 @@
+package br.com.senai.s042.autoescolas042.exception;
+
+public class UnknownException extends RuntimeException {
+    public UnknownException(String message) {
+        super(message);
+    }
+    public UnknownException
+}
